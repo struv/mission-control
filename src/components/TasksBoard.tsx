@@ -20,14 +20,14 @@ const mockTasks: Task[] = [
 ];
 
 const statusConfig = {
-  'todo': { label: 'To Do', color: '#6b7280', bg: 'bg-gray-800' },
-  'in-progress': { label: 'In Progress', color: '#3b82f6', bg: 'bg-blue-900/30' },
-  'blocked': { label: 'Blocked', color: '#ef4444', bg: 'bg-red-900/30' },
-  'done': { label: 'Done', color: '#22c55e', bg: 'bg-green-900/30' },
+  'todo': { label: 'To Do', color: '#71717a' },
+  'in-progress': { label: 'In Progress', color: '#3b82f6' },
+  'blocked': { label: 'Blocked', color: '#ef4444' },
+  'done': { label: 'Done', color: '#22c55e' },
 };
 
 const priorityConfig = {
-  'low': { label: '○', color: '#6b7280' },
+  'low': { label: '○', color: '#71717a' },
   'medium': { label: '●', color: '#eab308' },
   'high': { label: '●', color: '#f97316' },
   'critical': { label: '◉', color: '#ef4444' },
@@ -54,16 +54,18 @@ export default function TasksBoard() {
   return (
     <div className="card p-6">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-bold flex items-center gap-2">
+        <h2 className="text-base font-medium text-zinc-50 flex items-center gap-2">
           📋 Tasks
         </h2>
         
         {/* Owner filter */}
-        <div className="flex gap-2">
+        <div className="flex gap-1.5">
           <button
             onClick={() => setFilter('all')}
-            className={`px-3 py-1 rounded-full text-xs transition-colors ${
-              filter === 'all' ? 'bg-indigo-600' : 'bg-gray-700 hover:bg-gray-600'
+            className={`px-3 py-1.5 rounded-md text-[13px] font-medium transition-all duration-150 ${
+              filter === 'all' 
+                ? 'bg-zinc-800 text-zinc-50 border border-zinc-700' 
+                : 'text-zinc-400 hover:text-zinc-50 hover:bg-zinc-800/50'
             }`}
           >
             All
@@ -72,8 +74,10 @@ export default function TasksBoard() {
             <button
               key={owner}
               onClick={() => setFilter(owner)}
-              className={`px-3 py-1 rounded-full text-xs transition-colors ${
-                filter === owner ? 'bg-indigo-600' : 'bg-gray-700 hover:bg-gray-600'
+              className={`px-2.5 py-1.5 rounded-md text-[13px] transition-all duration-150 ${
+                filter === owner 
+                  ? 'bg-zinc-800 border border-zinc-700' 
+                  : 'hover:bg-zinc-800/50'
               }`}
             >
               {emoji}
@@ -91,35 +95,37 @@ export default function TasksBoard() {
           return (
             <div key={status} className="space-y-3">
               {/* Column Header */}
-              <div className="flex items-center gap-2 pb-2 border-b border-gray-700">
+              <div className="flex items-center gap-2 pb-2 border-b border-zinc-800">
                 <span 
                   className="w-2 h-2 rounded-full"
                   style={{ backgroundColor: config.color }}
                 />
-                <span className="font-medium text-sm">{config.label}</span>
-                <span className="text-xs text-gray-500">({columnTasks.length})</span>
+                <span className="text-sm font-medium text-zinc-50">{config.label}</span>
+                <span className="text-[12px] text-zinc-500">({columnTasks.length})</span>
               </div>
 
               {/* Tasks */}
-              <div className="space-y-2 min-h-[200px]">
+              <div className="space-y-2 min-h-[180px]">
                 {columnTasks.map(task => (
                   <div
                     key={task.id}
-                    className={`p-3 rounded-lg ${config.bg} border border-gray-700/50 hover:border-gray-600 transition-colors cursor-pointer`}
+                    className="p-3 rounded-md bg-zinc-900/50 border border-zinc-800 hover:border-zinc-700 transition-all duration-150 cursor-pointer group"
                   >
                     <div className="flex items-start justify-between gap-2">
-                      <span className="text-sm">{task.title}</span>
+                      <span className="text-[13px] text-zinc-50 group-hover:text-zinc-50">
+                        {task.title}
+                      </span>
                       <span 
-                        className="text-xs"
+                        className="text-[11px] flex-shrink-0"
                         style={{ color: priorityConfig[task.priority].color }}
                       >
                         {priorityConfig[task.priority].label}
                       </span>
                     </div>
-                    <div className="flex items-center gap-2 mt-2 text-xs text-gray-500">
-                      <span>{ownerEmoji[task.owner] || '👤'}</span>
+                    <div className="flex items-center gap-2 mt-2">
+                      <span className="text-[13px]">{ownerEmoji[task.owner] || '👤'}</span>
                       {task.project && (
-                        <span className="px-1.5 py-0.5 rounded bg-gray-700/50">
+                        <span className="px-1.5 py-0.5 rounded text-[11px] bg-zinc-800 text-zinc-400 border border-zinc-700/50">
                           {task.project}
                         </span>
                       )}

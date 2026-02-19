@@ -26,10 +26,10 @@ const agentEmoji: Record<string, string> = {
 };
 
 const typeColors: Record<string, string> = {
-  task: 'border-blue-500/30',
-  message: 'border-purple-500/30',
-  system: 'border-gray-500/30',
-  alert: 'border-yellow-500/30',
+  task: '#3b82f6',
+  message: '#a855f7',
+  system: '#71717a',
+  alert: '#eab308',
 };
 
 function formatTime(date: Date): string {
@@ -46,26 +46,29 @@ function formatTime(date: Date): string {
 export default function ActivityFeed() {
   return (
     <div className="card p-6">
-      <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+      <h2 className="text-base font-medium text-zinc-50 mb-4 flex items-center gap-2">
         📡 Activity Feed
       </h2>
 
-      <div className="space-y-3 max-h-[400px] overflow-y-auto">
+      <div className="space-y-1 max-h-[360px] overflow-y-auto">
         {mockActivities.map(activity => (
           <div 
             key={activity.id}
-            className={`flex items-start gap-3 p-3 rounded-lg bg-gray-800/30 border-l-2 ${typeColors[activity.type]}`}
+            className="flex items-start gap-3 p-3 rounded-md hover:bg-zinc-800/30 transition-colors duration-150"
+            style={{
+              borderLeft: `2px solid ${typeColors[activity.type]}30`,
+            }}
           >
-            <span className="text-lg">{agentEmoji[activity.agent]}</span>
+            <span className="text-base flex-shrink-0">{agentEmoji[activity.agent]}</span>
             <div className="flex-1 min-w-0">
-              <p className="text-sm">
+              <p className="text-[13px] text-zinc-50">
                 <span className="font-medium capitalize">{activity.agent}</span>
-                {' '}{activity.action}
+                <span className="text-zinc-400"> {activity.action}</span>
                 {activity.target && (
                   <span className="text-indigo-400"> {activity.target}</span>
                 )}
               </p>
-              <p className="text-xs text-gray-500 mt-0.5">{formatTime(activity.time)}</p>
+              <p className="text-[12px] text-zinc-500 mt-0.5">{formatTime(activity.time)}</p>
             </div>
           </div>
         ))}

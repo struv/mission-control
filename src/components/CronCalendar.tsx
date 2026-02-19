@@ -51,9 +51,9 @@ const mockJobs: CronJob[] = [
 ];
 
 const statusConfig = {
-  active: { color: '#22c55e', label: 'Active' },
-  paused: { color: '#eab308', label: 'Paused' },
-  error: { color: '#ef4444', label: 'Error' },
+  active: { color: '#22c55e' },
+  paused: { color: '#eab308' },
+  error: { color: '#ef4444' },
 };
 
 const ownerEmoji: Record<string, string> = {
@@ -93,7 +93,6 @@ export default function CronCalendar() {
   const [jobs, setJobs] = useState<CronJob[]>(mockJobs);
   const [, forceUpdate] = useState({});
 
-  // Update times every minute
   useEffect(() => {
     const timer = setInterval(() => forceUpdate({}), 60000);
     return () => clearInterval(timer);
@@ -110,64 +109,63 @@ export default function CronCalendar() {
   return (
     <div className="card p-6">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-bold flex items-center gap-2">
+        <h2 className="text-base font-medium text-zinc-50 flex items-center gap-2">
           ⏰ Scheduled Jobs
         </h2>
-        <button className="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-sm transition-colors">
+        <button className="btn btn-ghost text-[13px] py-1.5 px-3">
           + Add Job
         </button>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-2">
         {jobs.map(job => (
           <div
             key={job.id}
-            className="flex items-center justify-between p-4 rounded-lg bg-gray-800/50 border border-gray-700/50 hover:border-gray-600 transition-colors"
+            className="flex items-center justify-between p-4 rounded-md bg-zinc-900/30 border border-zinc-800 hover:border-zinc-700 transition-all duration-150"
           >
             <div className="flex items-center gap-4">
-              {/* Status indicator */}
+              {/* Toggle switch */}
               <button
                 onClick={() => toggleJob(job.id)}
-                className="relative w-10 h-6 rounded-full transition-colors"
+                className="relative w-9 h-5 rounded-full transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-900 focus-visible:ring-indigo-500"
                 style={{ 
-                  backgroundColor: job.status === 'active' 
-                    ? statusConfig.active.color + '30'
-                    : '#374151'
+                  backgroundColor: job.status === 'active' ? '#22c55e30' : '#27272a'
                 }}
+                aria-label={`Toggle ${job.name}`}
               >
                 <span
-                  className="absolute top-1 w-4 h-4 rounded-full transition-all"
+                  className="absolute top-0.5 w-4 h-4 rounded-full transition-all duration-150"
                   style={{
                     backgroundColor: statusConfig[job.status].color,
-                    left: job.status === 'active' ? '22px' : '4px',
+                    left: job.status === 'active' ? '18px' : '2px',
                   }}
                 />
               </button>
 
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="font-medium">{job.name}</span>
-                  <span className="text-sm">{ownerEmoji[job.owner]}</span>
+                  <span className="text-sm font-medium text-zinc-50">{job.name}</span>
+                  <span className="text-[13px]">{ownerEmoji[job.owner]}</span>
                 </div>
-                <div className="text-xs text-gray-500">{job.schedule}</div>
+                <div className="text-[12px] text-zinc-500">{job.schedule}</div>
               </div>
             </div>
 
-            <div className="flex items-center gap-6 text-sm">
+            <div className="flex items-center gap-6">
               {/* Last run */}
               {job.lastRun && (
                 <div className="text-right">
-                  <div className="text-gray-500 text-xs">Last run</div>
-                  <div className="text-gray-400">{formatTimeAgo(job.lastRun)}</div>
+                  <div className="text-[11px] text-zinc-500 uppercase tracking-wide">Last</div>
+                  <div className="text-[13px] text-zinc-400">{formatTimeAgo(job.lastRun)}</div>
                 </div>
               )}
 
               {/* Next run */}
-              <div className="text-right">
-                <div className="text-gray-500 text-xs">Next run</div>
+              <div className="text-right min-w-[60px]">
+                <div className="text-[11px] text-zinc-500 uppercase tracking-wide">Next</div>
                 <div 
-                  className="font-medium"
-                  style={{ color: statusConfig[job.status].color }}
+                  className="text-[13px] font-medium"
+                  style={{ color: job.status === 'active' ? statusConfig.active.color : '#71717a' }}
                 >
                   {job.status === 'active' ? formatTimeUntil(job.nextRun) : '—'}
                 </div>
@@ -175,7 +173,7 @@ export default function CronCalendar() {
 
               {/* Run now button */}
               <button
-                className="px-3 py-1 rounded bg-gray-700 hover:bg-gray-600 text-xs transition-colors"
+                className="btn btn-ghost text-[12px] py-1 px-2.5 disabled:opacity-40 disabled:cursor-not-allowed"
                 disabled={job.status !== 'active'}
               >
                 Run Now
